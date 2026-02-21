@@ -84,6 +84,8 @@ export default function HomePage() {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const [sectionType, setSectionType] = useState<"A" | "B">("A");
+  const [questionTypeSel, setQuestionTypeSel] = useState<"9" | "10" | "15" | "25">("9");
+  const [strictnessSel, setStrictnessSel] = useState<"student-friendly" | "examiner-strict">("student-friendly");
   const [questionImageDataUrl, setQuestionImageDataUrl] = useState<string>("");
   const [extractImageDataUrl, setExtractImageDataUrl] = useState<string>("");
   const [answerImageDataUrls, setAnswerImageDataUrls] = useState<string[]>([]);
@@ -146,6 +148,15 @@ export default function HomePage() {
   useEffect(() => {
     const id = getOrCreateClientUserId();
     const savedToken = typeof window !== "undefined" ? (localStorage.getItem("eliteecon_auth_token") || "") : "";
+
+    // Persisted UI prefs (MVP QoL)
+    const savedQ = typeof window !== "undefined" ? (localStorage.getItem("eliteecon_question_type") as any) : null;
+    const savedS = typeof window !== "undefined" ? (localStorage.getItem("eliteecon_strictness") as any) : null;
+    const savedSection = typeof window !== "undefined" ? (localStorage.getItem("eliteecon_section") as any) : null;
+    if (savedQ && ["9", "10", "15", "25"].includes(savedQ)) setQuestionTypeSel(savedQ);
+    if (savedS && ["student-friendly", "examiner-strict"].includes(savedS)) setStrictnessSel(savedS);
+    if (savedSection && ["A", "B"].includes(savedSection)) setSectionType(savedSection);
+
     setClientUserId(id);
     setAuthToken(savedToken);
     setAuthTokenInput(savedToken);
@@ -312,10 +323,10 @@ export default function HomePage() {
   return (
     <main className="eliteecon" style={{ maxWidth: 950, margin: "2rem auto", fontFamily: "Inter, system-ui, sans-serif" }}>
       <nav className="top-nav">
-        <a href="#" className="active">🏠 Dashboard</a>
-        <a href="#">📝 New Submission</a>
-        <a href="#">📊 Progress</a>
-        <a href="#">🕘 History</a>
+        <a href="#submission" className="active">📝 Submit</a>
+        <a href="#progress">📊 Progress</a>
+        <a href="#history">🕘 History</a>
+        <a href="https://github.com/frenzy1978/eliteecon-vercel" target="_blank" rel="noreferrer">GitHub</a>
       </nav>
 
       <h1>EliteEcon</h1>
@@ -328,12 +339,15 @@ export default function HomePage() {
         <div style={{ fontSize: 13, color: "#475569" }}>
           No sign-up yet. Your submissions are tracked by your local user id. For production rollouts we can add Supabase auth.
         </div>
-        <div style={{ marginTop: 8, display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <div style={{ marginTop: 8, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           <button type="button" onClick={() => setShowAdvanced((v) => !v)}>
             {showAdvanced ? "Hide" : "Show"} advanced settings
           </button>
-          <a href="/api/billing/status" style={{ fontSize: 13 }}>API: billing status</a>
-          <a href="/api/analytics" style={{ fontSize: 13 }}>API: analytics</a>
+          <a href="/api/billing/status" target="_blank" rel="noreferrer" style={{ fontSize: 13 }}>API: billing status</a>
+          <a href="/api/analytics" target="_blank" rel="noreferrer" style={{ fontSize: 13 }}>API: analytics</a>
+        </div>
+        <div style={{ marginTop: 8, fontSize: 12, color: "#64748b" }}>
+          Pilot note: history/analytics may reset occasionally on serverless while we validate demand.
         </div>
       </div>
 
@@ -344,7 +358,7 @@ export default function HomePage() {
       )}
 
       <div className="dashboard-grid">
-        <div className="left-col">
+        <div className="left-col" id="submission">
       {showAdvanced && (
         <section style={{ border: "1px solid #ddd", borderRadius: 8, padding: 10, marginBottom: 12 }}>
           <div style={{ fontWeight: 700, marginBottom: 6 }}>🔐 Auth (Supabase)</div>
@@ -391,7 +405,14 @@ export default function HomePage() {
       <form action={onSubmit} style={{ display: "grid", gap: 12 }}>
         <label>
           Exam section workflow
-          <select value={sectionType} onChange={(e) => setSectionType(e.target.value as "A" | "B")}>
+          <select
+            value={sectionType}
+            onChange={(e) => {
+              const v = e.target.value as "A" | "B";
+              setSectionType(v);
+              if (typeof window !== "undefined") localStorage.setItem("eliteecon_section", v);
+            }}
+          >
             <option value="A">Section A (question + extract + answer)</option>
             <option value="B">Section B (question + answer)</option>
           </select>
@@ -410,7 +431,15 @@ export default function HomePage() {
 
         <label>
           Question Type
-          <select name="questionType" defaultValue="25">
+          <select
+            name="questionType"
+            value={questionTypeSel}
+            onChange={(e) => {
+              const v = e.target.value as any;
+              setQuestionTypeSel(v);
+              if (typeof window !== "undefined") localStorage.setItem("eliteecon_question_type", v);
+            }}
+          >
             <option value="9">9 marker</option>
             <option value="10">10 marker</option>
             <option value="15">15 marker</option>
@@ -422,7 +451,15 @@ export default function HomePage() {
         <label>Command word <input name="commandWord" defaultValue="Evaluate" /></label>
         <label>
           Strictness
-          <select name="strictness" defaultValue="student-friendly">
+          <select
+            name="strictness"
+            value={strictnessSel}
+            onChange={(e) => {
+              const v = e.target.value as any;
+              setStrictnessSel(v);
+              if (typeof window !== "undefined") localStorage.setItem("eliteecon_strictness", v);
+            }}
+          >
             <option value="student-friendly">Student-friendly</option>
             <option value="examiner-strict">Examiner-strict</option>
           </select>
@@ -506,7 +543,7 @@ export default function HomePage() {
 
       <div className="right-col">
       {progress && (
-        <section className="cardish" style={{ padding: 12 }}>
+        <section id="progress" className="cardish" style={{ padding: 12 }}>
           <h2 style={{ marginTop: 0 }}>📊 Progress</h2>
           <div style={{ fontSize: 13, color: "#475569", marginBottom: 8 }}>Total attempts: <strong>{progress.totalAttempts}</strong></div>
 
@@ -621,7 +658,7 @@ export default function HomePage() {
         </section>
       )}
 
-      <section style={{ marginTop: 24 }}>
+      <section id="history" style={{ marginTop: 24 }}>
         <h2>Recent history</h2>
         {historyLoading ? (
           <p>Loading history…</p>
