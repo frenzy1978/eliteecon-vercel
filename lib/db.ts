@@ -17,7 +17,13 @@ export interface SavedSubmission {
   report: unknown;
 }
 
-const DATA_DIR = path.join(process.cwd(), "data");
+function getWritableBaseDir() {
+  // Vercel serverless filesystem is read-only except /tmp.
+  if (process.env.VERCEL) return process.env.TMPDIR || "/tmp";
+  return process.cwd();
+}
+
+const DATA_DIR = path.join(getWritableBaseDir(), "eliteecon-data");
 const DATA_FILE = path.join(DATA_DIR, "submissions.json");
 
 async function ensureStore() {

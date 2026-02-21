@@ -2,7 +2,13 @@ import { writeFile, readFile } from "node:fs/promises";
 import path from "node:path";
 import { existsSync } from "node:fs";
 
-const ANALYTICS_FILE = path.join(process.cwd(), "analytics", "marks.jsonl");
+function getWritableBaseDir() {
+  // Vercel serverless filesystem is read-only except /tmp.
+  if (process.env.VERCEL) return process.env.TMPDIR || "/tmp";
+  return process.cwd();
+}
+
+const ANALYTICS_FILE = path.join(getWritableBaseDir(), "eliteecon-analytics", "marks.jsonl");
 
 interface MarkEvent {
   timestamp: string;
