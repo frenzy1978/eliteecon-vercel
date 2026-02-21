@@ -424,6 +424,15 @@ export async function POST(req: Request) {
 
   const data = parsed.data;
 
+  // Text-only mode (low cost). Reject image uploads.
+  const textOnly = process.env.ELITEECON_TEXT_ONLY === "true";
+  if (textOnly && (data.questionImageDataUrl || data.extractImageDataUrl || (data.answerImageDataUrls?.length || 0) > 0)) {
+    return NextResponse.json({
+      error: "Text-only mode is enabled. Please paste the answer text and remove image uploads.",
+      detail: "Image uploads are disabled to reduce costs."
+    }, { status: 400 });
+  }
+
   try {
     const allowMockFallback = process.env.ELITEECON_ALLOW_MOCK_FALLBACK === "true";
     if (!process.env.ANTHROPIC_API_KEY && !process.env.OPENAI_API_KEY) {

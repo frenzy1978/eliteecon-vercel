@@ -83,6 +83,8 @@ export default function HomePage() {
   const [progress, setProgress] = useState<ProgressData | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
+  const TEXT_ONLY_MODE = true;
+
   const [sectionType, setSectionType] = useState<"A" | "B">("A");
   const [questionTypeSel, setQuestionTypeSel] = useState<"9" | "10" | "15" | "25">("9");
   const [strictnessSel, setStrictnessSel] = useState<"student-friendly" | "examiner-strict">("student-friendly");
@@ -390,7 +392,7 @@ export default function HomePage() {
       <div style={{ border: "1px solid #e2e8f0", background: "#f8fafc", padding: 12, borderRadius: 10, marginBottom: 12 }}>
         <div style={{ fontWeight: 700 }}>MVP pilot</div>
         <div style={{ fontSize: 13, color: "#475569" }}>
-          No sign-up yet. Your submissions are tracked by your local user id. For production rollouts we can add Supabase auth.
+          Text-only mode for cost control. No sign-up yet. Your submissions are tracked by your local user id.
         </div>
         <div style={{ marginTop: 8, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           <button type="button" onClick={() => setShowAdvanced((v) => !v)}>
@@ -570,70 +572,80 @@ export default function HomePage() {
         <label>Context/extract text (optional) <textarea name="contextText" rows={3} /></label>
         <label>Student answer text (optional if photo pages provided) <textarea name="studentAnswer" rows={8} /></label>
 
-        <label>
-          Photo of question
-          <input type="file" accept="image/*" capture="environment" onChange={(e) => onSingleImageChange(e, setQuestionImageDataUrl)} />
-        </label>
+        {!TEXT_ONLY_MODE && (
+          <>
+            <label>
+              Photo of question
+              <input type="file" accept="image/*" capture="environment" onChange={(e) => onSingleImageChange(e, setQuestionImageDataUrl)} />
+            </label>
 
-        {sectionType === "A" && (
-          <label>
-            Photo of extract/data
-            <input type="file" accept="image/*" capture="environment" onChange={(e) => onSingleImageChange(e, setExtractImageDataUrl)} />
-          </label>
+            {sectionType === "A" && (
+              <label>
+                Photo of extract/data
+                <input type="file" accept="image/*" capture="environment" onChange={(e) => onSingleImageChange(e, setExtractImageDataUrl)} />
+              </label>
+            )}
+
+            <label>
+              Photos of student answer pages (multi)
+              <input type="file" multiple accept="image/*" onChange={onAnswerImagesChange} />
+            </label>
+
+            {(questionImageDataUrl || extractImageDataUrl || answerImageDataUrls.length > 0) && (
+              <div style={{ border: "1px solid #ddd", borderRadius: 8, padding: 8 }}>
+                <p style={{ margin: 0, fontSize: 13 }}>Image preview</p>
+
+                {questionImageDataUrl && (
+                  <div>
+                    <p style={{ fontSize: 12 }}>Question photo ✅</p>
+                    <img src={questionImageDataUrl} alt="Question" style={{ width: "100%", maxHeight: 180, objectFit: "contain" }} />
+                    <button type="button" onClick={() => clearImage(setQuestionImageDataUrl)}>Remove question photo</button>
+                  </div>
+                )}
+
+                {extractImageDataUrl && (
+                  <div>
+                    <p style={{ fontSize: 12 }}>Extract photo ✅</p>
+                    <img src={extractImageDataUrl} alt="Extract" style={{ width: "100%", maxHeight: 180, objectFit: "contain" }} />
+                    <button type="button" onClick={() => clearImage(setExtractImageDataUrl)}>Remove extract photo</button>
+                  </div>
+                )}
+
+                {answerImageDataUrls.length > 0 && (
+                  <div>
+                    <p style={{ fontSize: 12 }}>Answer pages attached: {answerImageDataUrls.length}</p>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+                      {answerImageDataUrls.map((src, i) => (
+                        <img key={i} src={src} alt={`Answer page ${i + 1}`} style={{ width: "100%", maxHeight: 120, objectFit: "cover" }} />
+                      ))}
+                    </div>
+                    <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                      <button type="button" onClick={() => setAnswerImageDataUrls([])}>Clear answer pages</button>
+                      <button type="button" onClick={generateTranscriptPreview} disabled={transcribeLoading}>
+                        {transcribeLoading ? "Reading handwriting..." : "Preview transcription"}
+                      </button>
+                    </div>
+                    {transcribeMsg && (
+                      <p style={{ fontSize: 12, color: transcribeMsg.toLowerCase().includes("low") || transcribeMsg.toLowerCase().includes("retake") ? "#b45309" : "#166534" }}>
+                        {transcribeMsg}
+                      </p>
+                    )}
+                    {transcriptPreview && (
+                      <details>
+                        <summary>Transcription preview</summary>
+                        <pre style={{ whiteSpace: "pre-wrap", background: "#f7f7f7", padding: 8 }}>{transcriptPreview}</pre>
+                      </details>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         )}
 
-        <label>
-          Photos of student answer pages (multi)
-          <input type="file" multiple accept="image/*" onChange={onAnswerImagesChange} />
-        </label>
-
-        {(questionImageDataUrl || extractImageDataUrl || answerImageDataUrls.length > 0) && (
-          <div style={{ border: "1px solid #ddd", borderRadius: 8, padding: 8 }}>
-            <p style={{ margin: 0, fontSize: 13 }}>Image preview</p>
-
-            {questionImageDataUrl && (
-              <div>
-                <p style={{ fontSize: 12 }}>Question photo ✅</p>
-                <img src={questionImageDataUrl} alt="Question" style={{ width: "100%", maxHeight: 180, objectFit: "contain" }} />
-                <button type="button" onClick={() => clearImage(setQuestionImageDataUrl)}>Remove question photo</button>
-              </div>
-            )}
-
-            {extractImageDataUrl && (
-              <div>
-                <p style={{ fontSize: 12 }}>Extract photo ✅</p>
-                <img src={extractImageDataUrl} alt="Extract" style={{ width: "100%", maxHeight: 180, objectFit: "contain" }} />
-                <button type="button" onClick={() => clearImage(setExtractImageDataUrl)}>Remove extract photo</button>
-              </div>
-            )}
-
-            {answerImageDataUrls.length > 0 && (
-              <div>
-                <p style={{ fontSize: 12 }}>Answer pages attached: {answerImageDataUrls.length}</p>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
-                  {answerImageDataUrls.map((src, i) => (
-                    <img key={i} src={src} alt={`Answer page ${i + 1}`} style={{ width: "100%", maxHeight: 120, objectFit: "cover" }} />
-                  ))}
-                </div>
-                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                  <button type="button" onClick={() => setAnswerImageDataUrls([])}>Clear answer pages</button>
-                  <button type="button" onClick={generateTranscriptPreview} disabled={transcribeLoading}>
-                    {transcribeLoading ? "Reading handwriting..." : "Preview transcription"}
-                  </button>
-                </div>
-                {transcribeMsg && (
-                  <p style={{ fontSize: 12, color: transcribeMsg.toLowerCase().includes("low") || transcribeMsg.toLowerCase().includes("retake") ? "#b45309" : "#166534" }}>
-                    {transcribeMsg}
-                  </p>
-                )}
-                {transcriptPreview && (
-                  <details>
-                    <summary>Transcription preview</summary>
-                    <pre style={{ whiteSpace: "pre-wrap", background: "#f7f7f7", padding: 8 }}>{transcriptPreview}</pre>
-                  </details>
-                )}
-              </div>
-            )}
+        {TEXT_ONLY_MODE && (
+          <div style={{ border: "1px dashed #e2e8f0", borderRadius: 8, padding: 10, background: "#f8fafc", fontSize: 12, color: "#475569" }}>
+            Photo uploads are disabled in text-only mode to keep costs low. Paste the answer text below.
           </div>
         )}
 
