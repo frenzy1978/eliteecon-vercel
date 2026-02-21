@@ -86,6 +86,9 @@ export default function HomePage() {
   const [sectionType, setSectionType] = useState<"A" | "B">("A");
   const [questionTypeSel, setQuestionTypeSel] = useState<"9" | "10" | "15" | "25">("9");
   const [strictnessSel, setStrictnessSel] = useState<"student-friendly" | "examiner-strict">("student-friendly");
+  const [questionTextDraft, setQuestionTextDraft] = useState<string>("");
+  const [topicOverride, setTopicOverride] = useState<string>("");
+  const [commandWordOverride, setCommandWordOverride] = useState<string>("");
   const [questionImageDataUrl, setQuestionImageDataUrl] = useState<string>("");
   const [extractImageDataUrl, setExtractImageDataUrl] = useState<string>("");
   const [answerImageDataUrls, setAnswerImageDataUrls] = useState<string[]>([]);
@@ -97,6 +100,52 @@ export default function HomePage() {
   const [authMsg, setAuthMsg] = useState<string>("");
   const [authBusy, setAuthBusy] = useState(false);
   const [authSourceLabel, setAuthSourceLabel] = useState<string>("header-scaffold");
+
+  function detectCommandWord(text: string) {
+    const t = (text || "").trim();
+    if (!t) return "";
+    const candidates = [
+      "Evaluate",
+      "Assess",
+      "Discuss",
+      "Analyse",
+      "Analyze",
+      "Explain",
+      "To what extent",
+      "Compare",
+      "Consider",
+      "Examine"
+    ];
+    const lower = t.toLowerCase();
+    for (const c of candidates) {
+      if (lower.startsWith(c.toLowerCase())) return c;
+    }
+    // Fallback: first word if it looks like a command word
+    const first = t.split(/\s+/)[0] || "";
+    if (first.length >= 4 && first.length <= 12) return first;
+    return "";
+  }
+
+  function detectTopic(text: string, commandWord: string) {
+    const t = (text || "").trim();
+    if (!t) return "";
+    let rest = t;
+    if (commandWord) {
+      const re = new RegExp(`^${commandWord.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}\\s+`, "i");
+      rest = rest.replace(re, "");
+    }
+    rest = rest.replace(/^the\s+view\s+that\s+/i, "");
+    rest = rest.replace(/^how\s+/i, "");
+    rest = rest.replace(/^why\s+/i, "");
+    rest = rest.replace(/\s+\?\s*$/, "");
+    rest = rest.trim();
+    if (!rest) return "";
+    // Keep topic short
+    return rest.slice(0, 80);
+  }
+
+  const detectedCommandWord = useMemo(() => detectCommandWord(questionTextDraft), [questionTextDraft]);
+  const detectedTopic = useMemo(() => detectTopic(questionTextDraft, detectedCommandWord), [questionTextDraft, detectedCommandWord]);
 
   const instructions = useMemo(() => {
     if (sectionType === "A") {
@@ -283,12 +332,16 @@ export default function HomePage() {
     setErrorBanner("");
     setStatusText("Processing images and marking response…");
 
+    const questionText = String(formData.get("questionText") || "");
+    const topic = (topicOverride || "").trim() || detectedTopic || "unknown";
+    const commandWord = (commandWordOverride || "").trim() || detectedCommandWord || "Explain";
+
     const payload = {
       sectionType,
       questionType: Number(formData.get("questionType")),
-      topic: String(formData.get("topic") || ""),
-      commandWord: String(formData.get("commandWord") || ""),
-      questionText: String(formData.get("questionText") || ""),
+      topic,
+      commandWord,
+      questionText,
       contextText: String(formData.get("contextText") || ""),
       studentAnswer: String(formData.get("studentAnswer") || ""),
       strictness: String(formData.get("strictness") || "student-friendly"),
@@ -447,8 +500,47 @@ export default function HomePage() {
           </select>
         </label>
 
-        <label>Topic <input name="topic" defaultValue="Market failure" /></label>
-        <label>Command word <input name="commandWord" defaultValue="Evaluate" /></label>
+        {!showAdvanced ? (
+          <div style={{ border: "1px solid #e2e8f0", borderRadius: 8, padding: 10, background: "#f8fafc" }}>
+            <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4 }}>Auto-detected (from question text)</div>
+            <div style={{ fontSize: 13, color: "#475569" }}>
+              <div>Command word: <strong>{detectedCommandWord || "(type question text to detect)"}</strong></div>
+              <div>Topic: <strong>{detectedTopic || "(type question text to detect)"}</strong></div>
+              <div style={{ marginTop: 6, fontSize: 12, color: "#64748b" }}>
+                You can override these in Advanced settings if needed.
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <label>
+              Topic (optional)
+              <input
+                name="topic"
+                value={topicOverride}
+                onChange={(e) => setTopicOverride(e.target.value)}
+                placeholder={detectedTopic || "e.g., market failure"}
+              />
+            </label>
+            <label>
+              Command word (optional)
+              <input
+                name="commandWord"
+                value={commandWordOverride}
+                onChange={(e) => setCommandWordOverride(e.target.value)}
+                placeholder={detectedCommandWord || "e.g., Evaluate"}
+              />
+            </label>
+          </>
+        )}
+
+        {/* Keep form fields present even when hidden (API expects non-empty values) */}
+        {!showAdvanced && (
+          <>
+            <input type="hidden" name="topic" value={detectedTopic || "unknown"} />
+            <input type="hidden" name="commandWord" value={detectedCommandWord || "Explain"} />
+          </>
+        )}
         <label>
           Strictness
           <select
@@ -465,7 +557,16 @@ export default function HomePage() {
           </select>
         </label>
 
-        <label>Question text (optional if clear photo provided) <textarea name="questionText" rows={3} defaultValue="Question text if available" /></label>
+        <label>
+          Question text (recommended)
+          <textarea
+            name="questionText"
+            rows={3}
+            value={questionTextDraft}
+            onChange={(e) => setQuestionTextDraft(e.target.value)}
+            placeholder="Paste the question here (we'll auto-detect command word + topic)."
+          />
+        </label>
         <label>Context/extract text (optional) <textarea name="contextText" rows={3} /></label>
         <label>Student answer text (optional if photo pages provided) <textarea name="studentAnswer" rows={8} /></label>
 
