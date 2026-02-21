@@ -81,6 +81,7 @@ export default function HomePage() {
   const [transcribeMsg, setTranscribeMsg] = useState<string>("");
   const [transcribeLoading, setTranscribeLoading] = useState(false);
   const [progress, setProgress] = useState<ProgressData | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const [sectionType, setSectionType] = useState<"A" | "B">("A");
   const [questionImageDataUrl, setQuestionImageDataUrl] = useState<string>("");
@@ -318,7 +319,23 @@ export default function HomePage() {
       </nav>
 
       <h1>EliteEcon</h1>
-      <p style={{ marginTop: 0, color: "#334155" }}>AQA-aligned economics feedback that helps students improve every answer, fast.</p>
+      <p style={{ marginTop: 0, color: "#334155" }}>
+        AQA-aligned economics feedback that helps students improve every answer, fast.
+      </p>
+
+      <div style={{ border: "1px solid #e2e8f0", background: "#f8fafc", padding: 12, borderRadius: 10, marginBottom: 12 }}>
+        <div style={{ fontWeight: 700 }}>MVP pilot</div>
+        <div style={{ fontSize: 13, color: "#475569" }}>
+          No sign-up yet. Your submissions are tracked by your local user id. For production rollouts we can add Supabase auth.
+        </div>
+        <div style={{ marginTop: 8, display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button type="button" onClick={() => setShowAdvanced((v) => !v)}>
+            {showAdvanced ? "Hide" : "Show"} advanced settings
+          </button>
+          <a href="/api/billing/status" style={{ fontSize: 13 }}>API: billing status</a>
+          <a href="/api/analytics" style={{ fontSize: 13 }}>API: analytics</a>
+        </div>
+      </div>
 
       {errorBanner && (
         <div style={{ border: "1px solid #fca5a5", background: "#fef2f2", color: "#991b1b", padding: 10, borderRadius: 8, marginBottom: 12 }}>
@@ -328,46 +345,48 @@ export default function HomePage() {
 
       <div className="dashboard-grid">
         <div className="left-col">
-      <section style={{ border: "1px solid #ddd", borderRadius: 8, padding: 10, marginBottom: 12 }}>
-        <div style={{ fontWeight: 700, marginBottom: 6 }}>🔐 Auth (Supabase)</div>
-        <div style={{ fontSize: 12, color: "#666", marginBottom: 6 }}>
-          Preferred: sign in with email/password (dev). Or paste bearer token manually.
-        </div>
-        <div style={{ fontSize: 12, marginBottom: 6 }}>
-          Current auth mode: <strong>{authSourceLabel}</strong>
-        </div>
+      {showAdvanced && (
+        <section style={{ border: "1px solid #ddd", borderRadius: 8, padding: 10, marginBottom: 12 }}>
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>🔐 Auth (Supabase)</div>
+          <div style={{ fontSize: 12, color: "#666", marginBottom: 6 }}>
+            Optional. For the MVP pilot, header-based tracking is enough. Enable Supabase later for real sign-in.
+          </div>
+          <div style={{ fontSize: 12, marginBottom: 6 }}>
+            Current auth mode: <strong>{authSourceLabel}</strong>
+          </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
-          <input
-            value={authEmail}
-            onChange={(e) => setAuthEmail(e.target.value)}
-            placeholder="Email"
-          />
-          <input
-            value={authPassword}
-            onChange={(e) => setAuthPassword(e.target.value)}
-            placeholder="Password"
-            type="password"
-          />
-        </div>
-        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-          <button type="button" onClick={signInWithSupabasePassword} disabled={authBusy}>
-            {authBusy ? "Signing in..." : "Sign in (Supabase)"}
-          </button>
-        </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+            <input
+              value={authEmail}
+              onChange={(e) => setAuthEmail(e.target.value)}
+              placeholder="Email"
+            />
+            <input
+              value={authPassword}
+              onChange={(e) => setAuthPassword(e.target.value)}
+              placeholder="Password"
+              type="password"
+            />
+          </div>
+          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <button type="button" onClick={signInWithSupabasePassword} disabled={authBusy}>
+              {authBusy ? "Signing in..." : "Sign in (Supabase)"}
+            </button>
+          </div>
 
-        <input
-          value={authTokenInput}
-          onChange={(e) => setAuthTokenInput(e.target.value)}
-          placeholder="Paste access token (optional)"
-          style={{ width: "100%", marginBottom: 6 }}
-        />
-        <div style={{ display: "flex", gap: 8 }}>
-          <button type="button" onClick={saveAuthToken}>Save token</button>
-          <button type="button" onClick={clearAuthToken}>Clear token</button>
-        </div>
-        {authMsg && <div style={{ fontSize: 12, marginTop: 6, color: "#444" }}>{authMsg}</div>}
-      </section>
+          <input
+            value={authTokenInput}
+            onChange={(e) => setAuthTokenInput(e.target.value)}
+            placeholder="Paste access token (optional)"
+            style={{ width: "100%", marginBottom: 6 }}
+          />
+          <div style={{ display: "flex", gap: 8 }}>
+            <button type="button" onClick={saveAuthToken}>Save token</button>
+            <button type="button" onClick={clearAuthToken}>Clear token</button>
+          </div>
+          {authMsg && <div style={{ fontSize: 12, marginTop: 6, color: "#444" }}>{authMsg}</div>}
+        </section>
+      )}
 
       <form action={onSubmit} style={{ display: "grid", gap: 12 }}>
         <label>
