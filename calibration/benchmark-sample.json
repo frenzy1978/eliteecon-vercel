@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "aqa-15-001",
+      "sectionType": "B",
+      "questionType": 15,
+      "topic": "inflation",
+      "commandWord": "Discuss",
+      "questionText": "Discuss the likely effects of cost-push inflation on the UK economy.",
+      "contextText": "",
+      "studentAnswer": "Cost-push inflation means firms have higher costs and may raise prices...",
+      "teacherReference": {
+        "indicative_mark": 8,
+        "max": 15,
+        "band": "Mid",
+        "aoSummary": {
+          "ao1": "some",
+          "ao2": "some",
+          "ao3": "some",
+          "ao4": "limited"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "n/a",
+          "real_world_examples": "limited"
+        },
+        "notes": "Needs stronger real-world evidence and clearer evaluation chain."
+      }
+    }
+  ]
+}

@@ -1,0 +1,509 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "aqa-credit-9m-2026-02-19-01",
+      "sectionType": "A",
+      "questionType": 9,
+      "topic": "reduced availability of credit",
+      "commandWord": "Explain",
+      "questionText": "With the help of a diagram, explain how reduced availability of credit from banks may lead to increased unemployment.",
+      "contextText": "From attached extract-based paper",
+      "studentAnswer": "[Handwritten script provided as images in chat; see teacher notes for summary]",
+      "teacherReference": {
+        "indicative_mark": 7,
+        "max": 9,
+        "band": "High Level 2",
+        "aoSummary": {
+          "ao1": "secure",
+          "ao2": "some",
+          "ao3": "some",
+          "ao4": "limited"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a"
+        },
+        "notes": "Teacher provided range 6-7/9; stored midpoint 7 for calibration. Structure and chains improved vs prior script; precision still needs tightening."
+      },
+      "modelResult": {
+        "indicative_mark": {
+          "awarded": 5,
+          "max": 9,
+          "band": "Mid"
+        },
+        "ao_breakdown": {
+          "ao1": {
+            "strength": "Definitions of reduced availability of credit are present and relevant.",
+            "improvement": "Could include a more precise definition of credit availability.",
+            "score_hint": "3/5"
+          },
+          "ao2": {
+            "strength": "Application to aggregate demand and firm investment is relevant.",
+            "improvement": "More direct reference to the context or extract would strengthen application.",
+            "score_hint": "3/6"
+          },
+          "ao3": {
+            "strength": "Analysis of the mechanism linking credit availability to unemployment is logical.",
+            "improvement": "Could develop further with more distinct chains of reasoning or a diagram.",
+            "score_hint": "4/6"
+          },
+          "ao4": {
+            "strength": "Limited evaluation present, not central to the response.",
+            "improvement": "N/A",
+            "score_hint": "1/2"
+          }
+        },
+        "section_focus": {
+          "section": "A",
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a",
+          "note": "Strengthen extract/data integration in each paragraph for higher AO2/AO3 quality."
+        },
+        "mode": "live",
+        "generatedAt": "2026-02-20T17:02:33.473Z"
+      }
+    },
+    {
+      "id": "aqa-budget-deficit-25m-2026-02-19-01",
+      "sectionType": "A",
+      "questionType": 25,
+      "topic": "reducing the budget deficit",
+      "commandWord": "Evaluate",
+      "questionText": "Evaluate the view that increasing taxation is the best way to reduce a budget deficit.",
+      "contextText": "From attached extract-based paper",
+      "studentAnswer": "[Handwritten script provided as images in chat; see teacher notes for summary]",
+      "teacherReference": {
+        "indicative_mark": 16,
+        "max": 25,
+        "band": "Mid-High Level 3",
+        "aoSummary": {
+          "ao1": "secure",
+          "ao2": "some",
+          "ao3": "some",
+          "ao4": "some"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a"
+        },
+        "notes": "Teacher provided range 15-17/25; stored midpoint 16 for calibration. Stronger than previous script with clearer structure and broader evaluation; precision still needs tightening."
+      },
+      "modelResult": {
+        "indicative_mark": {
+          "awarded": 15,
+          "max": 25,
+          "band": "Low"
+        },
+        "ao_breakdown": {
+          "ao1": {
+            "strength": "Some relevant terminology is used, but definitions are vague.",
+            "improvement": "More precise definitions of key terms like 'budget deficit' and 'aggregate demand' are needed.",
+            "score_hint": "4"
+          },
+          "ao2": {
+            "strength": "Some contextual application is present, but it is not well integrated with the extract.",
+            "improvement": "Integrate specific data or examples from the extract to strengthen application.",
+            "score_hint": "3"
+          },
+          "ao3": {
+            "strength": "Basic analysis is present, but chains of reasoning are underdeveloped.",
+            "improvement": "Develop more detailed chains of reasoning linking taxation to budget deficit reduction and economic impacts.",
+            "score_hint": "2"
+          },
+          "ao4": {
+            "strength": "Some evaluation is attempted, but it is not central to the argument.",
+            "improvement": "Integrate evaluation throughout the essay rather than just in the conclusion.",
+            "score_hint": "1"
+          }
+        },
+        "section_focus": {
+          "section": "A",
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a",
+          "note": "Strengthen extract/data integration in each paragraph for higher AO2/AO3 quality."
+        },
+        "mode": "live",
+        "generatedAt": "2026-02-20T17:02:44.545Z"
+      }
+    },
+    {
+      "id": "aqa-credit-9m-2026-02-19-02",
+      "sectionType": "A",
+      "questionType": 9,
+      "topic": "reduced availability of credit to unemployment",
+      "commandWord": "Explain",
+      "questionText": "With the help of a diagram, explain how reduced availability of credit from banks may lead to increased unemployment.",
+      "contextText": "From attached extract-based paper",
+      "studentAnswer": "[Handwritten script provided as images in chat; weaker script batch]",
+      "teacherReference": {
+        "indicative_mark": 6,
+        "max": 9,
+        "band": "Mid Level 2",
+        "aoSummary": {
+          "ao1": "secure",
+          "ao2": "some",
+          "ao3": "basic but correct",
+          "ao4": "limited"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a"
+        },
+        "notes": "Teacher provided range 5-6/9; stored midpoint 6. Weaker than previous script overall."
+      },
+      "modelResult": {
+        "indicative_mark": {
+          "awarded": 4,
+          "max": 9,
+          "band": "Mid"
+        },
+        "ao_breakdown": {
+          "ao1": {
+            "strength": "Definitions of key terms are present but lack precision.",
+            "improvement": "Provide clearer definitions of key terms like 'credit' and 'unemployment'.",
+            "score_hint": "2/5"
+          },
+          "ao2": {
+            "strength": "Some application to the context is present, linking credit availability to unemployment.",
+            "improvement": "Stronger contextual links to the extract data would enhance this section.",
+            "score_hint": "3/6"
+          },
+          "ao3": {
+            "strength": "Analysis includes a basic mechanism linking credit availability to unemployment.",
+            "improvement": "Develop more distinct chains of reasoning and consider additional mechanisms.",
+            "score_hint": "3/6"
+          },
+          "ao4": {
+            "strength": "Limited evaluation present, not central to the response.",
+            "improvement": "N/A",
+            "score_hint": "1/2"
+          }
+        },
+        "section_focus": {
+          "section": "A",
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a",
+          "note": "Strengthen extract/data integration in each paragraph for higher AO2/AO3 quality."
+        },
+        "mode": "live",
+        "generatedAt": "2026-02-20T17:02:57.306Z"
+      }
+    },
+    {
+      "id": "aqa-budget-deficit-25m-2026-02-19-02",
+      "sectionType": "A",
+      "questionType": 25,
+      "topic": "increasing taxation and budget deficit",
+      "commandWord": "Evaluate",
+      "questionText": "Evaluate the view that increasing taxation is the best way to reduce a budget deficit.",
+      "contextText": "From attached extract-based paper",
+      "studentAnswer": "[Handwritten script provided as images in chat; weaker script batch]",
+      "teacherReference": {
+        "indicative_mark": 14,
+        "max": 25,
+        "band": "Low-Mid Level 3",
+        "aoSummary": {
+          "ao1": "secure",
+          "ao2": "some",
+          "ao3": "basic but correct",
+          "ao4": "present but shallow"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a"
+        },
+        "notes": "Teacher provided range 13-15/25; stored midpoint 14. Weaker than previous script overall; judgement underdeveloped and precision needs tightening."
+      },
+      "modelResult": {
+        "indicative_mark": {
+          "awarded": 15,
+          "max": 25,
+          "band": "Mid"
+        },
+        "ao_breakdown": {
+          "ao1": {
+            "strength": "Some relevant terminology and definitions are present.",
+            "improvement": "Definitions could be more precise and specific to the context of taxation and budget deficits.",
+            "score_hint": "4-5"
+          },
+          "ao2": {
+            "strength": "Some contextual application is present, but it lacks depth and integration with the extract.",
+            "improvement": "Stronger integration of extract data and specific examples would enhance application.",
+            "score_hint": "4-5"
+          },
+          "ao3": {
+            "strength": "Basic analysis is present, but chains of reasoning are not fully developed.",
+            "improvement": "Develop more detailed chains of reasoning linking taxation to budget deficits and economic outcomes.",
+            "score_hint": "2-3"
+          },
+          "ao4": {
+            "strength": "Some evaluation is attempted, but it is not central to the argument.",
+            "improvement": "Integrate evaluation throughout the essay rather than just in the conclusion.",
+            "score_hint": "2"
+          }
+        },
+        "section_focus": {
+          "section": "A",
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a",
+          "note": "Strengthen extract/data integration in each paragraph for higher AO2/AO3 quality."
+        },
+        "mode": "live",
+        "generatedAt": "2026-02-20T17:03:09.732Z"
+      }
+    },
+    {
+      "id": "aqa-credit-9m-2026-02-19-03",
+      "sectionType": "A",
+      "questionType": 9,
+      "topic": "reduced availability of credit to unemployment",
+      "commandWord": "Explain",
+      "questionText": "Explain how reduced availability of credit may lead to increased unemployment.",
+      "contextText": "From attached extract-based paper",
+      "studentAnswer": "[Handwritten script provided as images in chat; third batch]",
+      "teacherReference": {
+        "indicative_mark": 7,
+        "max": 9,
+        "band": "High Level 2",
+        "aoSummary": {
+          "ao1": "secure",
+          "ao2": "some",
+          "ao3": "clear but repetitive",
+          "ao4": "limited"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a"
+        },
+        "notes": "Teacher provided range 6-7/9; stored midpoint 7."
+      },
+      "modelResult": {
+        "indicative_mark": {
+          "awarded": 5,
+          "max": 9,
+          "band": "Mid"
+        },
+        "ao_breakdown": {
+          "ao1": {
+            "strength": "Definitions of credit and its importance are mentioned.",
+            "improvement": "Definitions could be clearer and more focused on the specific context of credit availability.",
+            "score_hint": "3/5"
+          },
+          "ao2": {
+            "strength": "Application to aggregate demand and firm investment is present.",
+            "improvement": "More explicit connections to the context of reduced credit availability and its direct effects on unemployment are needed.",
+            "score_hint": "3/6"
+          },
+          "ao3": {
+            "strength": "Some analysis of the mechanism is provided, including the multiplier effect.",
+            "improvement": "Analysis could be more developed with clearer chains of reasoning and specific examples.",
+            "score_hint": "3/6"
+          },
+          "ao4": {
+            "strength": "Limited evaluation is present, acknowledging potential government intervention.",
+            "improvement": "Evaluation is not central to the response and lacks depth.",
+            "score_hint": "1/2"
+          }
+        },
+        "section_focus": {
+          "section": "A",
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a",
+          "note": "Strengthen extract/data integration in each paragraph for higher AO2/AO3 quality."
+        },
+        "mode": "live",
+        "generatedAt": "2026-02-20T17:03:25.403Z"
+      }
+    },
+    {
+      "id": "aqa-budget-deficit-25m-2026-02-19-03",
+      "sectionType": "A",
+      "questionType": 25,
+      "topic": "increasing taxation and budget deficit",
+      "commandWord": "Evaluate",
+      "questionText": "Evaluate the view that increasing taxation is the best way to reduce a budget deficit.",
+      "contextText": "From attached extract-based paper",
+      "studentAnswer": "[Handwritten script provided as images in chat; third batch]",
+      "teacherReference": {
+        "indicative_mark": 15,
+        "max": 25,
+        "band": "Low Level 3",
+        "aoSummary": {
+          "ao1": "secure",
+          "ao2": "some",
+          "ao3": "clear but repetitive",
+          "ao4": "present but underdeveloped"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a"
+        },
+        "notes": "Teacher provided range 14-16/25; stored midpoint 15. Slightly stronger than prior 25 marker but still limited; judgement weak and precision needs strengthening."
+      },
+      "modelResult": {
+        "indicative_mark": {
+          "awarded": 15,
+          "max": 25,
+          "band": "Mid"
+        },
+        "ao_breakdown": {
+          "ao1": {
+            "strength": "Some relevant economic concepts are defined, but precision is lacking.",
+            "improvement": "More accurate definitions of key terms related to taxation and budget deficits are needed.",
+            "score_hint": "4-5"
+          },
+          "ao2": {
+            "strength": "Some contextual application is present, but it is not deeply integrated.",
+            "improvement": "Stronger integration of extract data and specific examples would enhance the application.",
+            "score_hint": "4-5"
+          },
+          "ao3": {
+            "strength": "Basic chains of reasoning are present, but they lack depth and development.",
+            "improvement": "Develop more complex chains of reasoning to show clear cause and effect relationships.",
+            "score_hint": "2-3"
+          },
+          "ao4": {
+            "strength": "Some evaluation is present, but it is mainly in the conclusion.",
+            "improvement": "Integrate evaluation throughout the essay to strengthen the argument.",
+            "score_hint": "2-3"
+          }
+        },
+        "section_focus": {
+          "section": "A",
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a",
+          "note": "Strengthen extract/data integration in each paragraph for higher AO2/AO3 quality."
+        },
+        "mode": "live",
+        "generatedAt": "2026-02-20T17:03:38.513Z"
+      }
+    },
+    {
+      "id": "aqa-credit-9m-2026-02-19-04",
+      "sectionType": "A",
+      "questionType": 9,
+      "topic": "reduced availability of credit to unemployment",
+      "commandWord": "Explain",
+      "questionText": "Explain how reduced availability of credit may lead to increased unemployment.",
+      "contextText": "From attached extract-based paper",
+      "studentAnswer": "[Handwritten script provided as images in chat; black pen stronger batch]",
+      "teacherReference": {
+        "indicative_mark": 8,
+        "max": 9,
+        "band": "High Level 2 / Low Level 3",
+        "aoSummary": {
+          "ao1": "secure",
+          "ao2": "some",
+          "ao3": "clear but repetitive",
+          "ao4": "limited"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a"
+        },
+        "notes": "Teacher provided range 7-8/9; stored midpoint rounded to 8. Stronger than previous 9 markers."
+      },
+      "modelResult": {
+        "indicative_mark": {
+          "awarded": 5,
+          "max": 9,
+          "band": "Mid"
+        },
+        "ao_breakdown": {
+          "ao1": {
+            "strength": "Definitions of key terms are present but lack precision.",
+            "improvement": "Provide clearer definitions of reduced availability of credit and its direct effects.",
+            "score_hint": "3/5"
+          },
+          "ao2": {
+            "strength": "Some application to the context of unemployment is present.",
+            "improvement": "Stronger links to the specific context of the extract are needed.",
+            "score_hint": "3/6"
+          },
+          "ao3": {
+            "strength": "Analysis includes a basic chain of reasoning regarding aggregate demand and employment.",
+            "improvement": "Develop further analysis with distinct mechanisms or effects.",
+            "score_hint": "4/6"
+          },
+          "ao4": {
+            "strength": "Limited evaluation present, not central to the response.",
+            "improvement": "N/A",
+            "score_hint": "1/3"
+          }
+        },
+        "section_focus": {
+          "section": "A",
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a",
+          "note": "Strengthen extract/data integration in each paragraph for higher AO2/AO3 quality."
+        },
+        "mode": "live",
+        "generatedAt": "2026-02-20T17:03:48.278Z"
+      }
+    },
+    {
+      "id": "aqa-budget-deficit-25m-2026-02-19-04",
+      "sectionType": "A",
+      "questionType": 25,
+      "topic": "increasing taxation and budget deficit",
+      "commandWord": "Evaluate",
+      "questionText": "Evaluate the view that increasing taxation is the best way to reduce a budget deficit.",
+      "contextText": "From attached extract-based paper",
+      "studentAnswer": "[Handwritten script provided as images in chat; black pen stronger batch]",
+      "teacherReference": {
+        "indicative_mark": 18,
+        "max": 25,
+        "band": "Secure Level 3",
+        "aoSummary": {
+          "ao1": "secure",
+          "ao2": "some",
+          "ao3": "clear but repetitive",
+          "ao4": "present but underdeveloped"
+        },
+        "sectionFocus": {
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a"
+        },
+        "notes": "Teacher provided range 17-19/25; stored midpoint 18. Stronger than earlier 25 markers; moving into strong B / low A territory, though judgement and precision still need strengthening."
+      },
+      "modelResult": {
+        "indicative_mark": {
+          "awarded": 15,
+          "max": 25,
+          "band": "Mid"
+        },
+        "ao_breakdown": {
+          "ao1": {
+            "strength": "Some relevant terminology and concepts are used, such as aggregate demand and employment.",
+            "improvement": "Definitions of key terms like 'budget deficit' and 'taxation' are vague and lack precision.",
+            "score_hint": "4-5"
+          },
+          "ao2": {
+            "strength": "Some contextual application is present, particularly in discussing aggregate demand and employment.",
+            "improvement": "Limited integration of extract data and specific examples to support arguments.",
+            "score_hint": "4-5"
+          },
+          "ao3": {
+            "strength": "Basic analysis of the impact of taxation on aggregate demand and employment is present.",
+            "improvement": "Chains of reasoning are underdeveloped and lack depth; more mechanisms could be explored.",
+            "score_hint": "2"
+          },
+          "ao4": {
+            "strength": "Some evaluation is attempted, particularly in discussing the impact of taxation on the economy.",
+            "improvement": "Evaluation is not integrated throughout the essay and is mainly in the conclusion.",
+            "score_hint": "2"
+          }
+        },
+        "section_focus": {
+          "section": "A",
+          "extract_data_usage": "some",
+          "real_world_examples": "n/a",
+          "note": "Strengthen extract/data integration in each paragraph for higher AO2/AO3 quality."
+        },
+        "mode": "live",
+        "generatedAt": "2026-02-20T17:04:03.797Z"
+      }
+    }
+  ]
+}

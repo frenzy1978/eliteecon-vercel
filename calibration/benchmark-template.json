@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "aqa-25-001",
+      "sectionType": "A",
+      "questionType": 25,
+      "topic": "market failure",
+      "commandWord": "Evaluate",
+      "questionText": "",
+      "contextText": "",
+      "studentAnswer": "",
+      "teacherReference": {
+        "indicative_mark": 0,
+        "max": 25,
+        "band": "",
+        "aoSummary": {
+          "ao1": "",
+          "ao2": "",
+          "ao3": "",
+          "ao4": ""
+        },
+        "sectionFocus": {
+          "extract_data_usage": "",
+          "real_world_examples": ""
+        },
+        "notes": ""
+      }
+    }
+  ]
+}

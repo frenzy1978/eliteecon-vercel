@@ -1,0 +1,74 @@
+{
+  "summary": {
+    "total": 8,
+    "over": 0,
+    "under": 8,
+    "severe": 3
+  },
+  "rows": [
+    {
+      "id": "aqa-budget-deficit-25m-2026-02-19-04",
+      "q": 25,
+      "teacher": 18,
+      "model": 13,
+      "delta": -5,
+      "direction": "under"
+    },
+    {
+      "id": "aqa-credit-9m-2026-02-19-03",
+      "q": 9,
+      "teacher": 7,
+      "model": 3,
+      "delta": -4,
+      "direction": "under"
+    },
+    {
+      "id": "aqa-credit-9m-2026-02-19-04",
+      "q": 9,
+      "teacher": 8,
+      "model": 4,
+      "delta": -4,
+      "direction": "under"
+    },
+    {
+      "id": "aqa-credit-9m-2026-02-19-01",
+      "q": 9,
+      "teacher": 7,
+      "model": 4,
+      "delta": -3,
+      "direction": "under"
+    },
+    {
+      "id": "aqa-budget-deficit-25m-2026-02-19-01",
+      "q": 25,
+      "teacher": 16,
+      "model": 13,
+      "delta": -3,
+      "direction": "under"
+    },
+    {
+      "id": "aqa-credit-9m-2026-02-19-02",
+      "q": 9,
+      "teacher": 6,
+      "model": 3,
+      "delta": -3,
+      "direction": "under"
+    },
+    {
+      "id": "aqa-budget-deficit-25m-2026-02-19-03",
+      "q": 25,
+      "teacher": 15,
+      "model": 13,
+      "delta": -2,
+      "direction": "under"
+    },
+    {
+      "id": "aqa-budget-deficit-25m-2026-02-19-02",
+      "q": 25,
+      "teacher": 14,
+      "model": 13,
+      "delta": -1,
+      "direction": "under"
+    }
+  ]
+}

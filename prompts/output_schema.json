@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "indicative_mark",
+    "section_focus",
+    "ao_breakdown",
+    "structure_checks",
+    "what_went_well",
+    "priority_fixes",
+    "rewrite",
+    "next_task",
+    "disclaimer"
+  ],
+  "properties": {
+    "indicative_mark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["awarded", "max", "band"],
+      "properties": {
+        "awarded": { "type": "number" },
+        "max": { "type": "number" },
+        "band": { "type": "string" }
+      }
+    },
+    "section_focus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["section", "extract_data_usage", "real_world_examples", "note"],
+      "properties": {
+        "section": { "enum": ["A", "B"] },
+        "extract_data_usage": { "enum": ["strong", "some", "limited", "n/a"] },
+        "real_world_examples": { "enum": ["strong", "some", "limited", "n/a"] },
+        "note": { "type": "string" }
+      }
+    },
+    "ao_breakdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ao1", "ao2", "ao3", "ao4"],
+      "properties": {
+        "ao1": { "$ref": "#/$defs/aoItem" },
+        "ao2": { "$ref": "#/$defs/aoItem" },
+        "ao3": { "$ref": "#/$defs/aoItem" },
+        "ao4": { "$ref": "#/$defs/aoItem" }
+      }
+    },
+    "structure_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "introduction",
+        "definitions",
+        "application",
+        "analysis_chains",
+        "evaluation_throughout",
+        "final_judgement"
+      ],
+      "properties": {
+        "introduction": { "enum": ["present", "partial", "missing"] },
+        "definitions": { "enum": ["accurate", "partial", "missing"] },
+        "application": { "enum": ["strong", "some", "weak"] },
+        "analysis_chains": { "enum": ["developed", "some", "limited"] },
+        "evaluation_throughout": { "enum": ["strong", "some", "limited"] },
+        "final_judgement": { "enum": ["clear_supported", "asserted", "missing"] }
+      }
+    },
+    "what_went_well": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "priority_fixes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["issue", "why_it_costs_marks", "exact_fix"],
+        "properties": {
+          "issue": { "type": "string" },
+          "why_it_costs_marks": { "type": "string" },
+          "exact_fix": { "type": "string" }
+        }
+      }
+    },
+    "rewrite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "improved_version"],
+      "properties": {
+        "target": { "type": "string" },
+        "improved_version": { "type": "string" }
+      }
+    },
+    "next_task": { "type": "string" },
+    "disclaimer": { "type": "string" }
+  },
+  "$defs": {
+    "aoItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strength", "improvement", "score_hint"],
+      "properties": {
+        "strength": { "type": "string" },
+        "improvement": { "type": "string" },
+        "score_hint": { "type": "string" }
+      }
+    }
+  }
+}

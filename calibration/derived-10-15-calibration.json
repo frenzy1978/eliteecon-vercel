@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "method": "derived-from-teacher-tagged-9-and-25-scripts",
+  "notes": "Interim anchors for 10/15 markers until direct teacher-tagged 10/15 scripts are added.",
+  "questionTypes": {
+    "10": {
+      "bands": [
+        {
+          "band": "high_l2",
+          "markRange": "6-7",
+          "profile": {
+            "knowledge": "secure",
+            "diagramUse": "adequate but not fully integrated",
+            "chains": "clear but repetitive",
+            "evaluation": "limited or brief",
+            "precision": "needs tightening"
+          },
+          "upgradeToNext": [
+            "tighten terminology precision",
+            "link diagram directly to chain-of-reasoning",
+            "add explicit link-back sentence to the question"
+          ]
+        },
+        {
+          "band": "low_l3",
+          "markRange": "8-9",
+          "profile": {
+            "knowledge": "secure",
+            "diagramUse": "integrated into analysis",
+            "chains": "mostly clear and linear",
+            "evaluation": "present when command word requires",
+            "precision": "mostly accurate with minor slips"
+          },
+          "upgradeToNext": [
+            "improve judgement sharpness",
+            "reduce repetition in causal steps"
+          ]
+        }
+      ]
+    },
+    "15": {
+      "bands": [
+        {
+          "band": "mid_l2",
+          "markRange": "7-9",
+          "profile": {
+            "knowledge": "secure but occasionally broad/generic",
+            "diagramUse": "present but underused",
+            "chains": "basic but correct",
+            "evaluation": "shallow/limited",
+            "precision": "needs strengthening"
+          },
+          "upgradeToNext": [
+            "add a third developed PEEL paragraph",
+            "improve application specificity",
+            "tighten terms and reduce vague phrasing"
+          ]
+        },
+        {
+          "band": "l3_secure",
+          "markRange": "10-12",
+          "profile": {
+            "knowledge": "secure and mostly precise",
+            "diagramUse": "well-linked to explanation",
+            "chains": "developed and mostly coherent",
+            "evaluation": "present and relevant where needed",
+            "precision": "good with occasional errors"
+          },
+          "upgradeToNext": [
+            "sharper micro-judgements",
+            "stronger conditional language (depends on SR/LR/elasticity)"
+          ]
+        }
+      ]
+    }
+  }
+}

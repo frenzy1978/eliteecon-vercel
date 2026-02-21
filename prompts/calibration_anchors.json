@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "board": "AQA",
+  "subject": "A-Level Economics",
+  "questionTypes": {
+    "10": { "bands": [], "notes": "Populate from official mark schemes" },
+    "15": { "bands": [], "notes": "Populate from official mark schemes" },
+    "25": { "bands": [], "notes": "Populate from official mark schemes" }
+  }
+}
