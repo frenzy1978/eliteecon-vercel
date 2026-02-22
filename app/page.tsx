@@ -52,7 +52,7 @@ type FeedbackResult = {
   disclaimer?: string;
 };
 
-async function compressToDataUrl(file: File, maxWidth = 1600, quality = 0.78): Promise<string> {
+async function compressToDataUrl(file: File, maxWidth = 1024, quality = 0.7): Promise<string> {
   const imageBitmap = await createImageBitmap(file);
   const scale = Math.min(1, maxWidth / imageBitmap.width);
   const width = Math.round(imageBitmap.width * scale);

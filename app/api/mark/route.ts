@@ -416,30 +416,43 @@ async function callNvidia(systemPrompt: string, userPrompt: string, imageDataUrl
     content.push({ type: "image_url", image_url: { url: imageDataUrl } });
   }
 
-  const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${process.env.NVIDIA_API_KEY || ""}`
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content }
-      ],
-      temperature: 0.2,
-      max_tokens: 1600
-    })
-  });
+  // Create an AbortController to kill the fetch before Vercel kills us (at 55s)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 55000);
 
-  if (!res.ok) {
-    const errText = await res.text().catch(() => "");
-    throw new Error(`NVIDIA API error ${res.status}: ${errText.slice(0, 300)}`);
+  try {
+    const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.NVIDIA_API_KEY || ""}`
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content }
+        ],
+        temperature: 0.2,
+        max_tokens: 1600
+      })
+    });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      throw new Error(`NVIDIA API error ${res.status}: ${errText.slice(0, 300)}`);
+    }
+    const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+    const text = data.choices?.[0]?.message?.content || "";
+    return extractJson(text);
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new Error("Model took too long to respond (timeout > 55s). Try smaller/fewer images.");
+    }
+    throw err;
   }
-  const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
-  const text = data.choices?.[0]?.message?.content || "";
-  return extractJson(text);
 }
 
 async function callModel(systemPrompt: string, userPrompt: string, imageDataUrls: string[] = []): Promise<unknown> {
