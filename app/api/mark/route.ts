@@ -10,6 +10,9 @@ import { getAuthUserFromRequest } from "@/lib/auth";
 import { getDefaultEntitlements, usageGuard } from "@/lib/billing";
 import { logMarkEvent } from "@/lib/analytics";
 
+export const maxDuration = 60; // Allow up to 60s for slow model inference (Vercel Pro/Hobby)
+export const dynamic = "force-dynamic";
+
 // Validate required environment variables on startup
 if (
   !process.env.OPENAI_API_KEY &&
