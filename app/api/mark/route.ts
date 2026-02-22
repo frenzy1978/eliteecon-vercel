@@ -228,6 +228,8 @@ const OPENAI_MARK_RESPONSE_SCHEMA = {
 } as const;
 
 function fallbackMock(max: 9 | 10 | 15 | 25, strictness: Strictness, sectionType: "A" | "B"): MarkResponse {
+  const isEvalRequired = max !== 9 && max !== 15;
+  
   return {
     indicative_mark: { awarded: Math.max(4, Math.floor(max * 0.6)), max, band: "Mid" },
     section_focus: {
@@ -242,15 +244,17 @@ function fallbackMock(max: 9 | 10 | 15 | 25, strictness: Strictness, sectionType
       ao1: { strength: "Some correct terminology used.", improvement: "Define key terms more precisely.", score_hint: "mid" },
       ao2: { strength: "Some context reference present.", improvement: "Apply each point directly to the case.", score_hint: "mid" },
       ao3: { strength: "At least one causal chain attempted.", improvement: "Develop full because->therefore->impact logic.", score_hint: "mid" },
-      ao4: { strength: "Some evaluative language used.", improvement: "Sustain evaluation throughout and end with conditional judgement.", score_hint: "mid" }
+      ao4: isEvalRequired 
+        ? { strength: "Some evaluative language used.", improvement: "Sustain evaluation throughout and end with conditional judgement.", score_hint: "mid" }
+        : { strength: "N/A", improvement: "Evaluation (AO4) is not required for this question type.", score_hint: "n/a" }
     },
     structure_checks: {
       introduction: "partial",
       definitions: "partial",
       application: "some",
       analysis_chains: "some",
-      evaluation_throughout: max === 25 ? "limited" : "some",
-      final_judgement: "asserted"
+      evaluation_throughout: isEvalRequired ? (max === 25 ? "limited" : "some") : "limited",
+      final_judgement: isEvalRequired ? "asserted" : "missing"
     },
     what_went_well: [
       "Clear attempt to answer the question directly.",
@@ -570,8 +574,14 @@ export async function POST(req: Request) {
     }
 
     const systemPrompt = await loadPrompt(data.questionType);
-    const needsEval = commandNeedsEvaluation(data.commandWord);
-    const userPrompt = `Strictness: ${data.strictness}\nSection: ${data.sectionType}\nQuestion type: ${data.questionType}\nTopic: ${data.topic}\nCommand word: ${data.commandWord}\nEvaluation required: ${needsEval ? "yes" : "no"}\nQuestion text: ${data.questionText || "[question in image]"}\nContext text: ${data.contextText || "N/A"}\n\nStudent answer text (may be partial/empty if image supplied):\n${data.studentAnswer || "[none provided]"}\n\nIf images are attached, read them in this order: question, extract (section A), then answer pages.\nFor Section A, assess extract-data usage quality.\nFor Section B, assess real-world example quality.\nIf evaluation is not required, keep AO4 conservative and explain it as limited/not central for this command.\nReturn ONLY valid JSON matching the schema.`;
+    let needsEval = commandNeedsEvaluation(data.commandWord);
+    
+    // Explicitly disable AO4/Evaluation requirement for 9 and 15 markers as per user request
+    if (data.questionType === 9 || data.questionType === 15) {
+      needsEval = false;
+    }
+
+    const userPrompt = `Strictness: ${data.strictness}\nSection: ${data.sectionType}\nQuestion type: ${data.questionType}\nTopic: ${data.topic}\nCommand word: ${data.commandWord}\nEvaluation required: ${needsEval ? "yes" : "no"}\nQuestion text: ${data.questionText || "[question in image]"}\nContext text: ${data.contextText || "N/A"}\n\nStudent answer text (may be partial/empty if image supplied):\n${data.studentAnswer || "[none provided]"}\n\nIf images are attached, read them in this order: question, extract (section A), then answer pages.\nFor Section A, assess extract-data usage quality.\nFor Section B, assess real-world example quality.\nIf evaluation is not required, keep AO4 conservative and explain it as limited/not central for this command.\nIMPORTANT: For 9 and 15 mark questions, do NOT prioritize AO4 (Evaluation). Focus on AO1, AO2, and AO3.\nReturn ONLY valid JSON matching the schema.`;
 
     const allImages = [
       data.questionImageDataUrl,
