@@ -404,7 +404,8 @@ async function callOllama(systemPrompt: string, userPrompt: string): Promise<unk
 }
 
 async function callNvidia(systemPrompt: string, userPrompt: string, imageDataUrls: string[] = []): Promise<unknown> {
-  const model = process.env.ELITEECON_NVIDIA_MODEL || "moonshotai/kimi-k2.5";
+  // Use Llama 3.1 70B via NVIDIA - often faster/more reliable than Kimi for vision tasks on this gateway
+  const model = process.env.ELITEECON_NVIDIA_MODEL || "meta/llama-3.1-70b-instruct";
   
   // Format content as array for text + images (OpenAI-compatible)
   const content: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
@@ -456,7 +457,7 @@ async function callNvidia(systemPrompt: string, userPrompt: string, imageDataUrl
 }
 
 async function callModel(systemPrompt: string, userPrompt: string, imageDataUrls: string[] = []): Promise<unknown> {
-  // 1. NVIDIA API (High priority if key present - supports Kimi/Moonshot)
+  // 1. NVIDIA API (High priority if key present)
   if (process.env.NVIDIA_API_KEY) {
     return callNvidia(systemPrompt, userPrompt, imageDataUrls);
   }
@@ -533,7 +534,10 @@ export async function POST(req: Request) {
   }
 
   try {
-    const allowMockFallback = process.env.ELITEECON_ALLOW_MOCK_FALLBACK === "true";
+    // Check if we allow mocks (default to TRUE so user gets a result if API fails)
+    const allowMockFallback = process.env.ELITEECON_ALLOW_MOCK_FALLBACK !== "false";
+    
+    // Check if we have ANY key configured
     if (
       !process.env.ANTHROPIC_API_KEY &&
       !process.env.OPENAI_API_KEY &&
@@ -624,7 +628,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ...validated, mode: "live" });
   } catch (err) {
-    const allowMockFallback = process.env.ELITEECON_ALLOW_MOCK_FALLBACK === "true";
+    const allowMockFallback = process.env.ELITEECON_ALLOW_MOCK_FALLBACK !== "false";
     const detail = err instanceof Error ? err.message : "Unknown model error";
     console.error("[/api/mark] Marking failed:", detail);
     if (!allowMockFallback) {
