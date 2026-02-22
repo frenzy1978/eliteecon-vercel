@@ -10,9 +10,14 @@ import { getAuthUserFromRequest } from "@/lib/auth";
 import { getDefaultEntitlements, usageGuard } from "@/lib/billing";
 import { logMarkEvent } from "@/lib/analytics";
 
-// Validate required environment variables on startup (Ollama supported)
-if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) {
-  console.warn("[SECURITY] WARNING: No API keys configured (OPENAI_API_KEY or ANTHROPIC_API_KEY). Marking will fail.");
+// Validate required environment variables on startup
+if (
+  !process.env.OPENAI_API_KEY &&
+  !process.env.ANTHROPIC_API_KEY &&
+  !process.env.ELITEECON_OLLAMA_BASE_URL &&
+  !process.env.NVIDIA_API_KEY
+) {
+  console.warn("[SECURITY] WARNING: No API keys configured (OPENAI, ANTHROPIC, OLLAMA, or NVIDIA). Marking will fail.");
 }
 
 const MAX_TEXT_CHARS = 12000;
@@ -366,7 +371,78 @@ async function callOpenAI(systemPrompt: string, userPrompt: string, imageDataUrl
   return extractJson(text);
 }
 
+async function callOllama(systemPrompt: string, userPrompt: string): Promise<unknown> {
+  const baseUrl = process.env.ELITEECON_OLLAMA_BASE_URL || "http://localhost:11434";
+  const model = process.env.ELITEECON_OLLAMA_MODEL || "mistral:7b";
+  
+  const res = await fetch(`${baseUrl}/api/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model,
+      system: systemPrompt,
+      prompt: userPrompt,
+      stream: false,
+      format: "json",
+      options: { temperature: 0.2 }
+    })
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    throw new Error(`Ollama error ${res.status}: ${errText.slice(0, 300)}`);
+  }
+
+  const data = (await res.json()) as { response: string };
+  return extractJson(data.response);
+}
+
+async function callNvidia(systemPrompt: string, userPrompt: string): Promise<unknown> {
+  // Uses NVIDIA's API Gateway (e.g. for Moonshot/Kimi or other hosted models)
+  // Default model set to Kimi k2.5 as requested, but overridable.
+  const model = process.env.ELITEECON_NVIDIA_MODEL || "moonshotai/kimi-k2.5";
+  
+  const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${process.env.NVIDIA_API_KEY || ""}`
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      temperature: 0.2,
+      max_tokens: 1600
+    })
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    throw new Error(`NVIDIA API error ${res.status}: ${errText.slice(0, 300)}`);
+  }
+  const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+  const text = data.choices?.[0]?.message?.content || "";
+  return extractJson(text);
+}
+
 async function callModel(systemPrompt: string, userPrompt: string, imageDataUrls: string[] = []): Promise<unknown> {
+  // 1. NVIDIA API (High priority if key present - supports Kimi/Moonshot)
+  if (process.env.NVIDIA_API_KEY) {
+    // Note: NVIDIA API via this endpoint might not support image inputs standardly for all models yet,
+    // so we strip images for now or would need a vision-specific check. 
+    // Kimi via NVIDIA is text-focused in this context unless specified.
+    // For now we pass text only to be safe.
+    return callNvidia(systemPrompt, userPrompt);
+  }
+
+  // 2. Ollama (Self-hosted)
+  if (process.env.ELITEECON_OLLAMA_BASE_URL) {
+    return callOllama(systemPrompt, userPrompt);
+  }
+
   const configuredModel = (process.env.ELITEECON_MODEL || "").trim();
   const wantsAnthropic = /^claude/i.test(configuredModel);
   const wantsOpenAI = configuredModel.length > 0 && !wantsAnthropic;
@@ -435,7 +511,12 @@ export async function POST(req: Request) {
 
   try {
     const allowMockFallback = process.env.ELITEECON_ALLOW_MOCK_FALLBACK === "true";
-    if (!process.env.ANTHROPIC_API_KEY && !process.env.OPENAI_API_KEY) {
+    if (
+      !process.env.ANTHROPIC_API_KEY &&
+      !process.env.OPENAI_API_KEY &&
+      !process.env.ELITEECON_OLLAMA_BASE_URL &&
+      !process.env.NVIDIA_API_KEY
+    ) {
       if (!allowMockFallback) {
         return NextResponse.json({ error: "Marking service unavailable: no model key configured." }, { status: 503 });
       }
