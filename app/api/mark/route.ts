@@ -10,7 +10,7 @@ import { getAuthUserFromRequest } from "@/lib/auth";
 import { getDefaultEntitlements, usageGuard } from "@/lib/billing";
 import { logMarkEvent } from "@/lib/analytics";
 
-// Validate required environment variables on startup
+// Validate required environment variables on startup (Ollama supported)
 if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) {
   console.warn("[SECURITY] WARNING: No API keys configured (OPENAI_API_KEY or ANTHROPIC_API_KEY). Marking will fail.");
 }
