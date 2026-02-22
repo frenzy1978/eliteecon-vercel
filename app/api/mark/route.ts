@@ -292,7 +292,10 @@ async function loadPrompt(questionType: 9 | 10 | 15 | 25) {
 function extractJson(text: string): unknown {
   const start = text.indexOf("{");
   const end = text.lastIndexOf("}");
-  if (start === -1 || end === -1 || end <= start) throw new Error("No JSON object found");
+  if (start === -1 || end === -1 || end <= start) {
+    console.error("[extractJson] Failed. Raw text:", text);
+    throw new Error(`No JSON found. Model replied: ${text.slice(0, 50)}...`);
+  }
   return JSON.parse(text.slice(start, end + 1));
 }
 
@@ -397,11 +400,19 @@ async function callOllama(systemPrompt: string, userPrompt: string): Promise<unk
   return extractJson(data.response);
 }
 
-async function callNvidia(systemPrompt: string, userPrompt: string): Promise<unknown> {
-  // Uses NVIDIA's API Gateway (e.g. for Moonshot/Kimi or other hosted models)
-  // Default model set to Kimi k2.5 as requested, but overridable.
+async function callNvidia(systemPrompt: string, userPrompt: string, imageDataUrls: string[] = []): Promise<unknown> {
   const model = process.env.ELITEECON_NVIDIA_MODEL || "moonshotai/kimi-k2.5";
   
+  // Format content as array for text + images (OpenAI-compatible)
+  const content: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
+    { type: "text", text: userPrompt }
+  ];
+
+  for (const imageDataUrl of imageDataUrls) {
+    if (!imageDataUrl?.startsWith("data:image/")) continue;
+    content.push({ type: "image_url", image_url: { url: imageDataUrl } });
+  }
+
   const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -412,7 +423,7 @@ async function callNvidia(systemPrompt: string, userPrompt: string): Promise<unk
       model,
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
+        { role: "user", content }
       ],
       temperature: 0.2,
       max_tokens: 1600
@@ -431,11 +442,7 @@ async function callNvidia(systemPrompt: string, userPrompt: string): Promise<unk
 async function callModel(systemPrompt: string, userPrompt: string, imageDataUrls: string[] = []): Promise<unknown> {
   // 1. NVIDIA API (High priority if key present - supports Kimi/Moonshot)
   if (process.env.NVIDIA_API_KEY) {
-    // Note: NVIDIA API via this endpoint might not support image inputs standardly for all models yet,
-    // so we strip images for now or would need a vision-specific check. 
-    // Kimi via NVIDIA is text-focused in this context unless specified.
-    // For now we pass text only to be safe.
-    return callNvidia(systemPrompt, userPrompt);
+    return callNvidia(systemPrompt, userPrompt, imageDataUrls);
   }
 
   // 2. Ollama (Self-hosted)
