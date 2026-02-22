@@ -352,27 +352,35 @@ export default function HomePage() {
       answerImageDataUrls
     };
 
-    const res = await fetch("/api/mark", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
-      body: JSON.stringify(payload)
-    });
+    try {
+      const res = await fetch("/api/mark", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+        body: JSON.stringify(payload)
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      setErrorBanner(data.error || "Could not mark this response right now. Please try again.");
+      if (!res.ok) {
+        setErrorBanner(data.error || "Could not mark this response right now. Please try again.");
+        setLoading(false);
+        setStatusText("");
+        return;
+      }
+
+      setResult(JSON.stringify(data, null, 2));
+      setFeedback(data);
+      await loadHistory();
+      await loadProgress();
       setLoading(false);
       setStatusText("");
-      return;
+    } catch (err: unknown) {
+      console.error("Marking error:", err);
+      const msg = err instanceof Error ? err.message : String(err);
+      setErrorBanner(`Something went wrong (check console): ${msg}`);
+      setLoading(false);
+      setStatusText("");
     }
-
-    setResult(JSON.stringify(data, null, 2));
-    setFeedback(data);
-    await loadHistory();
-    await loadProgress();
-    setLoading(false);
-    setStatusText("");
   }
 
   return (
