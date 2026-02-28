@@ -472,23 +472,22 @@ async function callModel(systemPrompt: string, userPrompt: string, imageDataUrls
   }
 
   const configuredModel = (process.env.ELITEECON_MODEL || "").trim();
-  const wantsAnthropic = /^claude/i.test(configuredModel);
-  const wantsOpenAI = configuredModel.length > 0 && !wantsAnthropic;
   const hasOpenAI = Boolean(process.env.OPENAI_API_KEY);
   const hasAnthropic = Boolean(process.env.ANTHROPIC_API_KEY);
 
-  if (wantsAnthropic && hasAnthropic) {
-    return callAnthropic(systemPrompt, userPrompt, imageDataUrls, configuredModel);
-  }
-  if (wantsOpenAI && hasOpenAI) {
-    return callOpenAI(systemPrompt, userPrompt, imageDataUrls, configuredModel);
+  // Default to Anthropic Haiku (fast/cheap) if Anthropic key is available and no other model is strictly enforced
+  if (hasAnthropic && (!configuredModel || /^claude/i.test(configuredModel))) {
+    return callAnthropic(systemPrompt, userPrompt, imageDataUrls, configuredModel || "claude-3-5-haiku-latest");
   }
 
+  // Fallback to OpenAI if configured or if Anthropic is missing but OpenAI is present
   if (hasOpenAI) {
-    return callOpenAI(systemPrompt, userPrompt, imageDataUrls, wantsAnthropic ? "gpt-4o-mini" : configuredModel || undefined);
+    return callOpenAI(systemPrompt, userPrompt, imageDataUrls, configuredModel || "gpt-4o-mini");
   }
+
+  // Absolute fallback if only Anthropic exists but a non-claude model was configured (ignore config, use haiku)
   if (hasAnthropic) {
-    return callAnthropic(systemPrompt, userPrompt, imageDataUrls, wantsOpenAI ? "claude-3-5-haiku-latest" : configuredModel || undefined);
+    return callAnthropic(systemPrompt, userPrompt, imageDataUrls, "claude-3-5-haiku-latest");
   }
 
   throw new Error("No supported model provider key configured");
