@@ -227,8 +227,8 @@ const OPENAI_MARK_RESPONSE_SCHEMA = {
   }
 } as const;
 
-function fallbackMock(max: 9 | 10 | 15 | 25, strictness: Strictness, sectionType: "A" | "B"): MarkResponse {
-  const isEvalRequired = max !== 9 && max !== 15;
+function fallbackMock(max: 9 | 10 | 15 | 25, strictness: Strictness, sectionType: "A" | "B", commandWord: string): MarkResponse {
+  const isEvalRequired = max === 25 || commandNeedsEvaluation(commandWord);
   
   return {
     indicative_mark: { awarded: Math.max(4, Math.floor(max * 0.6)), max, band: "Mid" },
@@ -551,7 +551,7 @@ export async function POST(req: Request) {
       if (!allowMockFallback) {
         return NextResponse.json({ error: "Marking service unavailable: no model key configured." }, { status: 503 });
       }
-      const mock = fallbackMock(data.questionType, data.strictness, data.sectionType);
+      const mock = fallbackMock(data.questionType, data.strictness, data.sectionType, data.commandWord);
       const cal = applyBandCalibration(mock.indicative_mark.awarded, data.questionType, data.strictness);
       mock.indicative_mark.awarded = cal.adjusted;
       mock.indicative_mark.band = cal.band;
@@ -574,14 +574,11 @@ export async function POST(req: Request) {
     }
 
     const systemPrompt = await loadPrompt(data.questionType);
-    let needsEval = commandNeedsEvaluation(data.commandWord);
     
-    // Explicitly disable AO4/Evaluation requirement for 9 and 15 markers as per user request
-    if (data.questionType === 9 || data.questionType === 15) {
-      needsEval = false;
-    }
+    // 25 markers always require evaluation. For 9, 10, and 15 markers, we only evaluate if the question explicitly asks for it (e.g., Evaluate, Discuss, Assess).
+    let needsEval = data.questionType === 25 ? true : commandNeedsEvaluation(data.commandWord);
 
-    const userPrompt = `Strictness: ${data.strictness}\nSection: ${data.sectionType}\nQuestion type: ${data.questionType}\nTopic: ${data.topic}\nCommand word: ${data.commandWord}\nEvaluation required: ${needsEval ? "yes" : "no"}\nQuestion text: ${data.questionText || "[question in image]"}\nContext text: ${data.contextText || "N/A"}\n\nStudent answer text (may be partial/empty if image supplied):\n${data.studentAnswer || "[none provided]"}\n\nIf images are attached, read them in this order: question, extract (section A), then answer pages.\nFor Section A, assess extract-data usage quality.\nFor Section B, assess real-world example quality.\nIf evaluation is not required, keep AO4 conservative and explain it as limited/not central for this command.\nIMPORTANT: For 9 and 15 mark questions, do NOT prioritize AO4 (Evaluation). Focus on AO1, AO2, and AO3.\nReturn ONLY valid JSON matching the schema.`;
+    const userPrompt = `Strictness: ${data.strictness}\nSection: ${data.sectionType}\nQuestion type: ${data.questionType}\nTopic: ${data.topic}\nCommand word: ${data.commandWord}\nEvaluation required: ${needsEval ? "yes" : "no"}\nQuestion text: ${data.questionText || "[question in image]"}\nContext text: ${data.contextText || "N/A"}\n\nStudent answer text (may be partial/empty if image supplied):\n${data.studentAnswer || "[none provided]"}\n\nIf images are attached, read them in this order: question, extract (section A), then answer pages.\nFor Section A, assess extract-data usage quality.\nFor Section B, assess real-world example quality.\nIf evaluation is not required, keep AO4 conservative and explain it as limited/not central for this command.\nIMPORTANT: If "Evaluation required" is "no" (typically 9, 10, or 15 mark questions without an evaluative command word), do NOT prioritize AO4 (Evaluation). Focus solely on AO1, AO2, and AO3.\nReturn ONLY valid JSON matching the schema.`;
 
     const allImages = [
       data.questionImageDataUrl,
@@ -645,7 +642,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Marking service temporarily unavailable.", detail }, { status: 502 });
     }
 
-    const mock = fallbackMock(data.questionType, data.strictness, data.sectionType);
+    const mock = fallbackMock(data.questionType, data.strictness, data.sectionType, data.commandWord);
     const cal = applyBandCalibration(mock.indicative_mark.awarded, data.questionType, data.strictness);
     mock.indicative_mark.awarded = cal.adjusted;
     mock.indicative_mark.band = cal.band;
